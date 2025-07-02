@@ -1,5 +1,6 @@
 import axios from "axios";
-import { FOOTBALL_API_URL, API_KEY, TEAM_ID, SEASON, LEAGUE } from "../config/config.js";
+import { API_HOST, API_KEY, TEAM_ID, SEASON} from "../config/config.js";
+import { formatData } from '../utils/formatResponse.js'; 
 
 const options = {
     method: 'GET',
@@ -10,13 +11,22 @@ const options = {
     },
     headers: {
         'x-rapidapi-key': API_KEY,
-        "x-rapidapi-host": API_HOST
+        'x-rapidapi-host': API_HOST
     }
 };
 
 try {
-    const response = await axios.request(options);
-    console.log(response.data);
+    const response = await axios.request(options);  
+
+    if (!response.data) {
+        console.log(`${response.status}, No Data Found.\n`);
+        //console.log(response.data);
+    }
+    
+    const teamFixtures = formatData(response.data);
+    
 } catch (error) {
     console.error(`Error: ${error.message}`);
 }
+
+export default teamFixtures;
